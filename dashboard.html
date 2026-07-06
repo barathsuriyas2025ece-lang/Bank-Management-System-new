@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Bank | Private Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --navy-dark: #001529;
+            --navy-light: #002140;
+            --gold: #c5a059;
+            --gold-bright: #ffd700;
+            --white: #ffffff;
+            --bg-gray: #f0f2f5;
+            --success: #27ae60;
+            --danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            display: flex;
+            color: var(--navy-dark);
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background: var(--navy-dark);
+            height: 100vh;
+            position: fixed;
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            color: var(--gold-bright);
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 12px;
+            display: block;
+            border-radius: 8px;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(255,255,255,0.1);
+            color: var(--gold-bright);
+        }
+
+        .spacer { flex-grow: 1; } /* Pushes Logout to bottom */
+
+        .logout-btn {
+            color: #ff4d4f;
+            border: 1px solid #ff4d4f;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .logout-btn:hover { background: #ff4d4f; color: white; }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 260px; /* Adjusted to match sidebar width */
+            padding: 40px;
+            width: calc(100% - 260px);
+            box-sizing: border-box;
+        }
+
+        /* Message Alerts */
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-light) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,21,41,0.2);
+            margin-bottom: 40px;
+        }
+
+        .balance-label { font-size: 0.9rem; opacity: 0.7; letter-spacing: 1px; }
+        .balance-amount { font-size: 3.5rem; font-weight: 700; margin: 10px 0; color: var(--gold-bright); }
+
+        /* Action Cards */
+        .grid-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .action-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1.5px solid #e1e4e8;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-deposit { background: var(--success); color: white; }
+        .btn-withdraw { background: var(--danger); color: white; }
+        .btn-transfer { background: #3498db; color: white; }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* Transaction Table */
+        .table-container {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; border-bottom: 2px solid var(--bg-gray); color: #888; font-size: 0.85rem; text-transform: uppercase; }
+        td { padding: 18px 15px; border-bottom: 1px solid var(--bg-gray); }
+        
+        .download-btn {
+            background: white;
+            color: var(--navy-dark);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+
+            .balance-amount {
+                font-size: 2.5rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2><i class="fas fa-university"></i> GlobalBank</h2>
+        <div style="margin-bottom: 30px; padding: 0 15px;">
+            <p style="font-size: 0.8rem; opacity: 0.6; margin: 0;">ACCOUNT HOLDER</p>
+            <p style="font-weight: 600; font-size: 1.1rem; margin: 5px 0;">{{ account.name }}</p>
+            <p style="font-size: 0.8rem; opacity: 0.6;">A/C: {{ account.account_number }}</p>
+        </div>
+
+        <a href="{% url 'home_detail' account.account_number %}" class="sidebar-link active"><i class="fas fa-th-large"></i> Overview</a>
+        <a href="{% url 'home_detail' account.account_number %}#transactions-section" class="sidebar-link"><i class="fas fa-exchange-alt"></i> Transactions</a>
+        <a href="{% url 'contact_settings' account.account_number %}" class="sidebar-link"><i class="fas fa-mobile-alt"></i> Contact</a>
+        <a href="{% url 'security_settings' account.account_number %}" class="sidebar-link"><i class="fas fa-user-shield"></i> Security</a>
+        
+        <div class="spacer"></div>
+
+        <a href="{% url 'logout' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+
+    <main class="main-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <header class="header">
+            <h1>Dashboard Overview</h1>
+            <a href="{% url 'export_pdf' account.account_number %}" class="download-btn">
+                <i class="fas fa-file-download"></i> e-Statement
+            </a>
+        </header>
+
+        <section class="balance-card">
+            <p class="balance-label">AVAILABLE BALANCE</p>
+            <p class="balance-amount">${{ account.balance }}</p>
+            <p style="opacity: 0.7; font-size: 0.9rem;"> <i class="fas fa-check-circle"></i> Account Status: Active</p>
+        </section>
+
+        <section class="grid-actions">
+            <div class="action-card">
+                <h3><i class="fas fa-arrow-down" style="color:var(--success)"></i> Quick Deposit</h3>
+                <form action="{% url 'deposit' account.account_number %}" method="POST">
+                    {% csrf_token %}
+                    <input type="number" name="amount" placeholder="Enter amount ($)" step="0.01" required>
+                    <button class="btn btn-deposit">Deposit Funds</button>
+                </form>
+            </div>
+
+            <div class="action-card">
+                <h3><i class="fas fa-arrow-up" style="color:var(--danger)"></i> Withdraw</h3>
+                <form action="{% url 'withdraw' account.account_number %}" method="POST">
+                    {% csrf_token %}
+                    <input type="number" name="amount" placeholder="Enter amount ($)" step="0.01" required>
+                    <button class="btn btn-withdraw">Withdraw Funds</button>
+                </form>
+            </div>
+
+            <div class="action-card">
+                <h3><i class="fas fa-paper-plane" style="color:#3498db"></i> Transfer Money</h3>
+                <form action="{% url 'transfer' account.account_number %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="receiver_no" placeholder="Recipient Account No." required>
+                    <input type="number" name="amount" placeholder="Amount ($)" step="0.01" required>
+                    <button class="btn btn-transfer">Send Now</button>
+                </form>
+            </div>
+        </section>
+        <section class="table-container" id="transactions-section">
+            <h3 style="margin-bottom: 20px;">Recent Activity</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trans in transactions %}
+                    <tr>
+                        <td>{{ trans.timestamp|date:"M d, Y | H:i" }}</td>
+                        <td style="font-weight: 600;">{{ trans.type }}</td>
+                        <td style="font-weight: 700; color: var(--navy-dark);">${{ trans.amount }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" style="text-align:center; color:#888;">No recent transactions.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="table-container" id="notifications-section" style="margin-top: 30px;">
+            <h3 style="margin-bottom: 20px;"><i class="fas fa-bell" style="color: var(--gold-bright);"></i> Secure Notifications</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Date & Time</th>
+                        <th>Alert Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notif in notifications %}
+                    <tr>
+                        <td style="white-space: nowrap; font-size: 0.9rem; color: #666;">{{ notif.timestamp|date:"M d, Y | H:i" }}</td>
+                        <td>
+                            <strong style="color: var(--navy-dark); font-size: 1.05rem;">{{ notif.title }}</strong>
+                            <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #555;">{{ notif.message }}</p>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="2" style="text-align:center; color:#888; padding: 20px;">No recent notifications.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

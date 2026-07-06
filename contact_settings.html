@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Bank | Contact Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --navy-dark: #001529;
+            --navy-light: #002140;
+            --gold: #c5a059;
+            --gold-bright: #ffd700;
+            --white: #ffffff;
+            --bg-gray: #f0f2f5;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            display: flex;
+            color: var(--navy-dark);
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--navy-dark);
+            height: 100vh;
+            position: fixed;
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            color: var(--gold-bright);
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 12px;
+            display: block;
+            border-radius: 8px;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(255,255,255,0.1);
+            color: var(--gold-bright);
+        }
+
+        .spacer { flex-grow: 1; }
+
+        .logout-btn {
+            color: #ff4d4f;
+            border: 1px solid #ff4d4f;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .logout-btn:hover { background: #ff4d4f; color: white; }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            width: calc(100% - 260px);
+            box-sizing: border-box;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .settings-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--navy-dark);
+        }
+
+        .settings-section h3 {
+            margin-top: 0;
+            color: var(--navy-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1.5px solid #e1e4e8;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--navy-dark);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--navy-dark);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .info-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2><i class="fas fa-university"></i> GlobalBank</h2>
+        <div style="margin-bottom: 30px; padding: 0 15px;">
+            <p style="font-size: 0.8rem; opacity: 0.6; margin: 0;">ACCOUNT HOLDER</p>
+            <p style="font-weight: 600; font-size: 1.1rem; margin: 5px 0;">{{ account.name }}</p>
+            <p style="font-size: 0.8rem; opacity: 0.6;">A/C: {{ account.account_number }}</p>
+        </div>
+
+        <a href="{% url 'home_detail' account.account_number %}" class="sidebar-link"><i class="fas fa-th-large"></i> Overview</a>
+        <a href="{% url 'home_detail' account.account_number %}#transactions-section" class="sidebar-link"><i class="fas fa-exchange-alt"></i> Transactions</a>
+        <a href="{% url 'contact_settings' account.account_number %}" class="sidebar-link active"><i class="fas fa-mobile-alt"></i> Contact</a>
+        <a href="{% url 'security_settings' account.account_number %}" class="sidebar-link"><i class="fas fa-user-shield"></i> Security</a>
+        
+        <div class="spacer"></div>
+
+        <a href="{% url 'login' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+
+    <main class="main-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <header class="header">
+            <h1>Contact Settings</h1>
+        </header>
+
+        <section class="settings-section">
+            <h3><i class="fas fa-mobile-alt" style="color: var(--navy-dark);"></i> Update Contact Information</h3>
+            <p>This information is used to send transaction alerts and notifications.</p>
+            
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="{{ account.email }}" placeholder="your@email.com">
+                    <p class="info-text">✓ Used for email notifications on transactions</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Mobile Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ account.phone }}" placeholder="+1234567890" required>
+                    <p class="info-text">✓ Use international format (e.g., +14155552671)</p>
+                    <p class="info-text">✓ Used for SMS notifications on transactions</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Contact Information
+                </button>
+            </form>
+        </section>
+
+        <section class="settings-section">
+            <h3><i class="fas fa-info-circle" style="color: var(--navy-dark);"></i> Current Contact Details</h3>
+            <p><strong>Email:</strong> {{ account.email|default:"Not set" }}</p>
+            <p><strong>Mobile:</strong> {{ account.phone|default:"Not set" }}</p>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 15px;">
+                <i class="fas fa-lightbulb"></i> Update your contact information to receive instant notifications for all transactions.
+            </p>
+        </section>
+    </main>
+</body>
+</html>
